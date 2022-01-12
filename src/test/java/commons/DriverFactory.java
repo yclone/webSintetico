@@ -14,7 +14,7 @@ public class DriverFactory {
     DesiredCapabilities capability;
     static String resp = "";
     private static ThreadLocal<WebDriver> driver = new ThreadLocal<WebDriver>();
-    static String gridAddress = "172.18.0.2:4444";
+    static String gridAddress = "localhost:4444";
 
     public static WebDriver getDriver() {
         return driver.get();
