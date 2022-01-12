@@ -1,12 +1,10 @@
 package commons;
 
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -16,7 +14,7 @@ public class DriverFactory {
     DesiredCapabilities capability;
     static String resp = "";
     private static ThreadLocal<WebDriver> driver = new ThreadLocal<WebDriver>();
-    static String gridAddress = "localhost:4444";
+    static String gridAddress = "0.0.0.0:4444";
 
     public static WebDriver getDriver() {
         return driver.get();
