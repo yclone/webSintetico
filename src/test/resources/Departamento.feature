@@ -2,7 +2,9 @@
 #Author: Vinicius Marra Santos
 
 @departamento
-Funcionalidade: testes de cadastro e listagem de departamentos
+Funcionalidade: eu como usuario admin do sistema
+  desejo que seja possivel cadastrar e listar departamentos
+  de modo que possa utilizar os departamentos
 
   @listaDepartamentos @Chrome
   Cenario: pega a lista de departamentos
@@ -17,3 +19,4 @@ Funcionalidade: testes de cadastro e listagem de departamentos
     E digito no campo Departamento o valor "dep cria sintetico"
     Entao devo apresentar a mensagem "Departamento inserido com sucesso."
     E removo o cadastro criado
+
