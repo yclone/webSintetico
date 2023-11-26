@@ -2,9 +2,12 @@ package commons;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -15,7 +18,8 @@ public class DriverFactory {
     static String resp = "";
     private static ThreadLocal<WebDriver> driver = new ThreadLocal<WebDriver>();
 //    static String gridAddress = "'127.0.0.1:4444/";
-    static String gridAddress = "172.17.0.7:4444";
+    static String gridAddress = "http://selenium-hub:4444";
+//    static String gridAddress = "http://172.18.0.11:4444";
 
     public static WebDriver getDriver() {
         return driver.get();
@@ -26,8 +30,8 @@ public class DriverFactory {
         driver.remove();
     }
 
-    public static void setDriver(int i) {
-        RemoteWebDriver rd = null;
+    public static void setDriver(int i) throws MalformedURLException {
+        WebDriver rd = null;
         switch (i) {
             case 1:
                 FirefoxOptions optionsF = new FirefoxOptions();
@@ -41,22 +45,33 @@ public class DriverFactory {
                 capabilitiesF.setCapability(FirefoxOptions.FIREFOX_OPTIONS, optionsF);
 //			 optionsF.addArguments("--headless");
                 try {
-                    rd = new RemoteWebDriver(new URL("http://" + gridAddress + "/wd/hub"), capabilitiesF);
+                    rd = new RemoteWebDriver(new URL("http://" + gridAddress + "/session"), capabilitiesF);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
                 driver.set(rd);
                 break;
             case 2:
-                DesiredCapabilities capabilities = new DesiredCapabilities();
-                capabilities.setCapability("browserName", "chrome");
-                capabilities.setCapability("browserVersion", "96.0");
-                capabilities.setCapability("selenoid:options", Map.<String, Object>of(
-                        "enableVNC", true
-//                        ,"enableVideo", true
-                ));
+                ChromeOptions options = new ChromeOptions();
+                options.addArguments("--ignore-ssl-errors=yes");
+                options.addArguments("--ignore-certificate-errors");
+                options.addArguments("--remote-allow-origins=*");
+//                options.addArguments("--headless=new");
                 try {
-                    rd = new RemoteWebDriver(new URL("http://" + gridAddress + "/wd/hub"), capabilities);
+                    rd = new RemoteWebDriver(new URL(gridAddress), options);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                driver.set(rd);
+                break;
+            case 3:
+                ChromeOptions optionsTest = new ChromeOptions();
+                optionsTest.addArguments("--ignore-ssl-errors=yes");
+                optionsTest.addArguments("--ignore-certificate-errors");
+                optionsTest.addArguments("--remote-allow-origins=*");
+//                optionsTest.addArguments("--headless=new");
+                try {
+                    rd = new RemoteWebDriver(new URL("http://localhost:8888"), optionsTest);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }

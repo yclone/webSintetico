@@ -8,16 +8,21 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
+
 public class JSWaiter {
 
     private static WebDriver jsWaitDriver;
     private static WebDriverWait jsWait;
     private static JavascriptExecutor jsExec;
 
+    public JSWaiter(WebDriver driver) {
+    }
+
     // Get the driver
     public static void setDriver(WebDriver driver) {
         jsWaitDriver = driver;
-        jsWait = new WebDriverWait(jsWaitDriver, 30);
+        jsWait = new WebDriverWait(jsWaitDriver, Duration.ofSeconds(30));
         jsExec = (JavascriptExecutor) jsWaitDriver;
     }
 
@@ -84,7 +89,7 @@ public class JSWaiter {
             }
         };
         try {
-            WebDriverWait wait = new WebDriverWait(jsWaitDriver, 30);
+            WebDriverWait wait = new WebDriverWait(jsWaitDriver, Duration.ofSeconds(30));
             resp = wait.until(pageLoadCondition);
             return resp;
         } catch (Exception e) {

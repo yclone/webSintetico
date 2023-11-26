@@ -9,38 +9,49 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class Comands extends JSWaiter{
+import java.time.Duration;
+import java.util.List;
 
-    WebDriver driver;
+import static org.junit.Assert.assertEquals;
+
+public class Comands extends JSWaiter {
+
+    private static WebDriver driver;
     public static WebDriverWait wait;
 
     public Comands(WebDriver driver) {
+        super(driver);
         this.driver = driver;
-        wait = new WebDriverWait(driver, 30);
-        setDriver(driver);
-        waitGifLoading(By.id("carregamento"));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         waitForLoadPage();
+    }
+
+    public static Comands getInstance() {
+        if (driver == null) {
+            driver = DriverFactory.getDriver();
+        }
+        return new Comands(driver);
     }
 
     public Comands Navegate(String url) {
         driver.switchTo().defaultContent();
         driver.manage().deleteAllCookies();
         driver.get(url);
-        return new Comands(driver);
+        return getInstance();
     }
 
 
     public Comands digitar(WebElement item, String value) {
-        try {
-            wait.until(ExpectedConditions.elementToBeClickable(item));
-            driver.switchTo().defaultContent();
-            item.clear();
-            item.sendKeys(value);
-            item.sendKeys(Keys.TAB);
-        } catch (NullPointerException e) {
-            System.err.println(e);
-        }
-        return new Comands(driver);
+        wait.until(ExpectedConditions.elementToBeClickable(item));
+        driver.switchTo().defaultContent();
+        item.clear();
+        item.sendKeys(value);
+        item.sendKeys(Keys.TAB);
+
+// Assert that the value was actually entered into the field
+        assertEquals(value, item.getAttribute("value"));
+
+        return getInstance();
     }
 
 
@@ -56,14 +67,14 @@ public class Comands extends JSWaiter{
         wait.until(ExpectedConditions.elementToBeClickable(item));
         driver.switchTo().defaultContent();
         item.click();
-        return new Comands(driver);
+        return getInstance();
     }
 
     public Comands selecionar(WebElement itemSelect, WebElement itemSelect1, String arg1) {
         wait.until(ExpectedConditions.visibilityOf(itemSelect));
         itemSelect.click();
         new Select(itemSelect1).selectByVisibleText(arg1);
-        return new Comands(driver);
+        return getInstance();
     }
 
     public boolean validaResp(WebElement results, String resp) {
@@ -76,5 +87,12 @@ public class Comands extends JSWaiter{
     public void scroll() {
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         jse.executeScript("window.scrollBy(0,150)");
+    }
+
+    public void limparCampos(By selector) {
+        List<WebElement> campos = driver.findElements(selector);
+        for (WebElement campo : campos) {
+            campo.clear();
+        }
     }
 }
